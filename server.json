@@ -1,0 +1,41 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.amidabuddha/jev-decision-mcp",
+  "description": "Typed Jev decisions in one batched tool: choice, score, and yes/no probabilities.",
+  "repository": {
+    "url": "https://github.com/amidabuddha/jev-decision-mcp",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "jev-decision-mcp",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "TYPESAFE_API_KEY",
+          "description": "Your TypeSafe API key from console.typesafe.ai",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        },
+        {
+          "name": "TYPESAFE_DEFAULT_MODEL",
+          "description": "Default Jev model",
+          "default": "jev-latest",
+          "format": "string"
+        },
+        {
+          "name": "JEV_TIMEOUT_MS",
+          "description": "Total request deadline in milliseconds, including retries (1\u2013120000)",
+          "default": "30000",
+          "format": "number"
+        }
+      ]
+    }
+  ]
+}

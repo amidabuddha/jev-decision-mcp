@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { loadProjectEnv, readConfig } from "./config.js";
 import { createDecider } from "./decision.js";

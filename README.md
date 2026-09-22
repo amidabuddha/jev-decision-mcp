@@ -2,6 +2,8 @@
 
 A local stdio MCP server exposing one tool, **`jev_decide`**, for typed decisions through the official TypeSafe API. Written in TypeScript with the official MCP and TypeSafe SDKs.
 
+Independent community project; not affiliated with TypeSafe. Licensed under [MIT](LICENSE).
+
 | Question | Use it for | Result |
 | --- | --- | --- |
 | `choice` | Choose a label or candidate | Choice, probabilities, confidence |
@@ -15,6 +17,8 @@ Batch independent questions over the same context in one call. Answers retain th
 Requires Node.js 22 or newer.
 
 ```sh
+git clone https://github.com/amidabuddha/jev-decision-mcp.git
+cd jev-decision-mcp
 npm ci
 cp -n .env.example .env
 # Edit .env and set TYPESAFE_API_KEY.
@@ -124,3 +128,19 @@ Built using the `typesafe-ai` skill and official documentation, checked Septembe
 - [MCP server development](https://modelcontextprotocol.io/docs/develop/build-server)
 
 `jev-latest` follows TypeSafe model updates. For repeatable evaluations, set a specific supported model version. SDK versions are recorded in `package-lock.json`.
+
+## Releases and package publishing
+
+GitHub releases provide source archives. The repository also includes npm packaging
+and official MCP Registry metadata in `server.json`. npm and registry publication
+are separate steps; a GitHub release does not imply that either listing is live.
+
+To verify the publishable artifact locally, run `npm pack --dry-run`. The package
+contains the compiled server, license, README, example input, and registry metadata.
+Local `.env` files, tests, and development dependencies are not bundled.
+
+After the npm package has been published, clients can launch it with
+`npx -y jev-decision-mcp@0.1.0`. For that installation method, provide
+`TYPESAFE_API_KEY` in the MCP host's environment; the package does not read a `.env`
+from the caller's working directory. The clone-and-build setup above remains
+available independently of npm publication.

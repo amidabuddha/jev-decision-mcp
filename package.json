@@ -1,10 +1,11 @@
 {
   "name": "jev-decision-mcp",
   "version": "0.1.0",
-  "private": true,
   "description": "A local MCP server for TypeSafe Jev typed decisions",
   "type": "module",
-  "engines": { "node": ">=22.0.0" },
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
@@ -12,7 +13,8 @@
     "test": "npm run build && tsx --test test/*.test.ts",
     "check": "tsc -p tsconfig.check.json && npm test",
     "test:live": "npm run build && tsx scripts/live-test.ts",
-    "test:codex": "npm run build && node --import tsx scripts/check-codex-schema.ts"
+    "test:codex": "npm run build && node --import tsx scripts/check-codex-schema.ts",
+    "prepack": "npm run build"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.30.0",
@@ -23,5 +25,37 @@
     "@types/node": "^22.0.0",
     "tsx": "^4.0.0",
     "typescript": "^5.9.0"
-  }
+  },
+  "license": "MIT",
+  "author": "Stefan (amidabuddha)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amidabuddha/jev-decision-mcp.git"
+  },
+  "homepage": "https://github.com/amidabuddha/jev-decision-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/amidabuddha/jev-decision-mcp/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "jev",
+    "typesafe",
+    "codex",
+    "classification"
+  ],
+  "bin": {
+    "jev-decision-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md",
+    "examples/decision.json",
+    "server.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "mcpName": "io.github.amidabuddha/jev-decision-mcp"
 }
