@@ -1,0 +1,30 @@
+{
+  "state": {
+    "ticket": "I was charged twice for order A-104. Please refund the duplicate charge today.",
+    "policy": "Duplicate charges should be reviewed by billing. This tool only classifies the request."
+  },
+  "questions": {
+    "team": {
+      "type": "choice",
+      "instructions": "Which team should handle the issue in `ticket`?",
+      "criteria": {
+        "billing": "Charges, invoices, or refunds",
+        "technical": "Broken features or software failures",
+        "other": "Neither billing nor technical"
+      }
+    },
+    "refund_requested": {
+      "type": "noul",
+      "instructions": "Does the customer explicitly request a refund in `ticket`?"
+    },
+    "urgency": {
+      "type": "score",
+      "instructions": "How time-sensitive is the customer's requested response in `ticket`?",
+      "criteria": [
+        "No response deadline or time pressure is stated",
+        "A response is requested within several days",
+        "A response is requested today or immediately"
+      ]
+    }
+  }
+}

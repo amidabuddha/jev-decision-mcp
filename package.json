@@ -1,0 +1,27 @@
+{
+  "name": "jev-decision-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A local MCP server for TypeSafe Jev typed decisions",
+  "type": "module",
+  "engines": { "node": ">=22.0.0" },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "test": "npm run build && tsx --test test/*.test.ts",
+    "check": "tsc -p tsconfig.check.json && npm test",
+    "test:live": "npm run build && tsx scripts/live-test.ts",
+    "test:codex": "npm run build && node --import tsx scripts/check-codex-schema.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.30.0",
+    "@typesafe-ai/sdk": "0.6.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.9.0"
+  }
+}
