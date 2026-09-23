@@ -22,12 +22,46 @@ Requires Node.js 22 or newer. The published package runs without cloning or buil
 npx -y jev-decision-mcp@0.1.0
 ```
 
-Set `TYPESAFE_API_KEY` in your MCP host's environment. Configure the host to run
-`npx` with arguments `["-y", "jev-decision-mcp@0.1.0"]`. It communicates over stdio;
-starting it in a terminal waits for an MCP client rather than opening a web page.
-The npm installation does not read a `.env` from the caller's working directory.
+Set `TYPESAFE_API_KEY` in your MCP host's environment. For hosts that use
+`mcpServers` JSON configuration:
+
+```json
+{
+  "mcpServers": {
+    "jev": {
+      "command": "npx",
+      "args": ["-y", "jev-decision-mcp@0.1.0"]
+    }
+  }
+}
+```
+
+Node.js and npm must be installed and available on the host's `PATH`. If the
+host cannot resolve `npx`, use its platform-specific launcher or absolute path
+as documented by that host. GUI applications may have a different `PATH` from
+your terminal.
+
+The server communicates over stdio; starting it in a terminal waits for an MCP
+client rather than opening a web page. The npm installation does not read a
+`.env` from the caller's working directory.
 
 Package: [jev-decision-mcp on npm](https://www.npmjs.com/package/jev-decision-mcp).
+
+## Connect to Codex
+
+For the npm package, merge this into your Codex `config.toml`:
+
+```toml
+[mcp_servers.jev]
+command = "npx"
+args = ["-y", "jev-decision-mcp@0.1.0"]
+env_vars = ["TYPESAFE_API_KEY"]
+tool_timeout_sec = 45
+```
+
+Set `TYPESAFE_API_KEY` in the environment that launches Codex; `env_vars` forwards
+its existing value to the server. Keep the host tool timeout above
+`JEV_TIMEOUT_MS / 1000`. See [official Codex MCP configuration](https://developers.openai.com/codex/mcp).
 
 ## Setup from source
 
@@ -37,8 +71,7 @@ Requires Node.js 22 or newer.
 git clone https://github.com/amidabuddha/jev-decision-mcp.git
 cd jev-decision-mcp
 npm ci
-cp -n .env.example .env
-# Edit .env and set TYPESAFE_API_KEY.
+# Copy .env.example to .env and set TYPESAFE_API_KEY.
 npm run build
 ```
 
@@ -54,41 +87,18 @@ Obtain the key from [TypeSafe Console](https://console.typesafe.ai). Use an offi
 
 The server starts without a key so a host can discover the tool. Calls then return `MISSING_API_KEY`. API traffic is fixed to `https://api.typesafe.ai/v1/systemone`; `TYPESAFE_BASE_URL` does not override it. State and questions are sent to TypeSafe and may incur API charges. The server does not persist inputs or decisions and disables SDK logging. Upstream error bodies are not exposed because they may echo submitted data.
 
-## Connect to Codex
+### Connect a local source build
 
-After building, run:
+After building, configure your host to run `node` with the absolute path to
+`dist/index.js` as its argument. For Codex, replace the npm example's `command`
+with `"node"` and `args` with `["/absolute/path/to/jev-decision-mcp/dist/index.js"]`.
+That path is a placeholder: use your own checkout path. In TOML or JSON, Windows
+paths can use forward slashes, for example `"C:/projects/jev-decision-mcp/dist/index.js"`.
+If `node` is not on the host's `PATH`, use the absolute path to your Node executable.
 
-```sh
-codex mcp add jev -- "$(command -v node)" "$PWD/dist/index.js"
-```
-
-Run this command from the repository root. It registers the absolute paths to your Node executable and built server.
-
-Alternatively, merge this into your Codex `config.toml`, replacing the example paths with your absolute paths:
-
-```toml
-[mcp_servers.jev]
-command = "/opt/homebrew/bin/node"
-args = ["/absolute/path/to/jev-decision-mcp/dist/index.js"]
-tool_timeout_sec = 45
-```
-
-Keep the host tool timeout above `JEV_TIMEOUT_MS / 1000`. The key stays in `.env`; it need not appear in the command or MCP configuration. See [official Codex MCP configuration](https://developers.openai.com/codex/mcp).
-
-For other stdio MCP hosts, configure your absolute paths similarly:
-
-```json
-{
-  "mcpServers": {
-    "jev": {
-      "command": "/opt/homebrew/bin/node",
-      "args": ["/absolute/path/to/jev-decision-mcp/dist/index.js"]
-    }
-  }
-}
-```
-
-The host starts the process and communicates over stdin/stdout. For interactive local development use `npm run dev`; this is not an HTTP server. No host configuration is modified by setup or tests.
+The source build reads the repository's `.env`, so `env_vars` is only needed if
+you supply the key through Codex's environment instead. For interactive local
+development use `npm run dev`. No host configuration is modified by setup or tests.
 
 ## Call the tool
 
