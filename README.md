@@ -1,5 +1,7 @@
 # Jev Decision MCP
 
+[![Jev Decision MCP – quality and maintenance score on Glama](https://glama.ai/mcp/servers/amidabuddha/jev-decision-mcp/badges/card.svg)](https://glama.ai/mcp/servers/amidabuddha/jev-decision-mcp)
+
 A local stdio MCP server exposing one tool, **`jev_decide`**, for typed decisions through the official TypeSafe API. Written in TypeScript with the official MCP and TypeSafe SDKs.
 
 Independent community project; not affiliated with TypeSafe. Licensed under [MIT](LICENSE).
@@ -146,9 +148,21 @@ Built using the `typesafe-ai` skill and official documentation, checked Septembe
 
 ## Releases and package publishing
 
-GitHub releases provide source archives. The repository also includes npm packaging
-and official MCP Registry metadata in `server.json`. npm and registry publication
-are separate steps; a GitHub release does not imply that either listing is live.
+Publishing a stable GitHub release triggers `.github/workflows/publish-npm.yml`.
+The workflow checks that the release tag (`v` plus the package version) matches
+`package.json` and `server.json`, runs the checks, and publishes to npm using
+GitHub OIDC. It requires an npm trusted publisher configured for user
+`amidabuddha`, repository `jev-decision-mcp`, workflow filename `publish-npm.yml`,
+no environment name, and permission for direct `npm publish`. No npm token is needed.
+
+For a new release, update `package.json`, `package-lock.json`, and all version
+fields in `server.json` together, then publish a matching GitHub release from
+that commit. Confirm the **Publish npm** workflow succeeds. Existing versions
+cannot be published again; prereleases are not published by this workflow.
+
+The official MCP Registry uses the separate, manually triggered **Publish MCP
+Registry** workflow. Run it from `main` after the corresponding npm version is
+available. GitHub release creation alone does not confirm either publication.
 
 To verify the publishable artifact locally, run `npm pack --dry-run`. The package
 contains the compiled server, license, README, example input, and registry metadata.
