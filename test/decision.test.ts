@@ -109,6 +109,53 @@ test("malformed response is never returned as a decision", async () => {
   assert.deepEqual(validateResponse(output, input), output);
 });
 
+test("preserves rounded probabilities and usage for a ten-question, twenty-choice batch", async () => {
+  const labels = Array.from({ length: 20 }, (_, i) => `candidate_${i}`);
+  const criteria = Object.fromEntries(labels.map((label) => [label, null]));
+  const questions = Object.fromEntries(Array.from({ length: 10 }, (_, i) => [
+    `job_${i}`, { type: "choice", instructions: "Choose the best candidate for this synthetic job.", criteria },
+  ]));
+  const request = decisionInput.parse({ state: "Synthetic routing test", questions });
+  // Minimal distribution from the failing live response; other labels are zero.
+  for (const leading of [0.81, 0.83]) {
+    const values = [leading, 0.11, 0.03, 0.02, 0.01, 0.01, ...Array(14).fill(0)];
+    const probabilities = Object.fromEntries(labels.map((label, i) => [label, values[i]]));
+    const response = {
+      model: "jev-1.13.0",
+      answers: Object.fromEntries(Object.keys(questions).map((id) => [id, {
+        type: "choice", choice: "candidate_0", probabilities, confidence: 0.8,
+      }])),
+      usage: { input_tokens: 28892, output_tokens: 2950 },
+    };
+    const decide = createDecider(config, async () => Response.json(response));
+    assert.deepEqual(await decide(request), response);
+  }
+});
+
+test("accepts rounded score distributions without changing score, confidence or probabilities", () => {
+  for (const probabilities of [{ "0": 0.33, "1": 0.33, "2": 0.33 }, { "0": 0.34, "1": 0.34, "2": 0.33 }]) {
+    const response = { ...output, answers: { ...output.answers, urgency: {
+      ...output.answers.urgency, probabilities,
+    } } };
+    assert.deepEqual(validateResponse(response, input), response);
+  }
+});
+
+test("rejects probability errors beyond rounding, higher-precision errors and zero mass", async () => {
+  for (const probabilities of [
+    { billing: 0.3, technical: 0.3, other: 0.3 },
+    { billing: 0.4, technical: 0.4, other: 0.4 },
+    { billing: 0.8001, technical: 0.1001, other: 0.0898 },
+    { billing: 0, technical: 0, other: 0 },
+  ]) {
+    const response = { ...output, answers: { ...output.answers, team: {
+      ...output.answers.team, probabilities,
+    } } };
+    const decide = createDecider(config, async () => Response.json(response));
+    await assert.rejects(decide(input), { code: "INVALID_RESPONSE" });
+  }
+});
+
 test("config defaults and timeout validation", () => {
   assert.deepEqual(readConfig({}), { apiKey: undefined, model: "jev-latest", timeoutMs: 30000 });
   assert.equal(readConfig({ TYPESAFE_API_KEY: "  test  " }).apiKey, "test");

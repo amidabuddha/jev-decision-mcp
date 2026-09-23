@@ -62,8 +62,15 @@ export function validateResponse(raw: unknown, input: DecisionInput): DecisionOu
     const levels = question.type === "choice" ? Object.keys(question.criteria)
       : question.type === "score" ? question.criteria.map((_, index) => String(index)) : [];
     if (!sameKeys(answer.probabilities, levels)) throw new Error("Probability labels do not match criteria");
-    const sum = Object.values(answer.probabilities).reduce((a, b) => a + b, 0);
-    if (Math.abs(sum - 1) > 0.001) throw new Error("Probabilities do not sum to one");
+    const values = Object.values(answer.probabilities);
+    const sum = values.reduce((a, b) => a + b, 0);
+    // Jev can return probabilities rounded to two decimals (observed totals
+    // include 0.99). Each rounded entry can contribute at most 0.005 error.
+    // Keep the tighter check for higher-precision responses, and never
+    // normalize the upstream values or accept a distribution with no mass.
+    const roundedToCents = values.every((p) => Math.abs(p * 100 - Math.round(p * 100)) < 1e-9);
+    const tolerance = roundedToCents ? values.length * 0.005 : 0.001;
+    if (sum <= 0 || Math.abs(sum - 1) > tolerance + 1e-12) throw new Error("Probabilities do not sum to one within rounding tolerance");
     if (answer.type === "choice" && !levels.includes(answer.choice)) throw new Error("Unknown choice");
     if (answer.type === "score" && (answer.score < 0 || answer.score > levels.length - 1 || !sameKeys(answer.legend, levels))) {
       throw new Error("Score or legend does not match criteria");

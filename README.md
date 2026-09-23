@@ -19,7 +19,7 @@ Batch independent questions over the same context in one call. Answers retain th
 Requires Node.js 22 or newer. The published package runs without cloning or building:
 
 ```sh
-npx -y jev-decision-mcp@0.1.1
+npx -y jev-decision-mcp@0.1.2
 ```
 
 Set `TYPESAFE_API_KEY` in your MCP host's environment. For hosts that use
@@ -30,7 +30,7 @@ Set `TYPESAFE_API_KEY` in your MCP host's environment. For hosts that use
   "mcpServers": {
     "jev": {
       "command": "npx",
-      "args": ["-y", "jev-decision-mcp@0.1.1"]
+      "args": ["-y", "jev-decision-mcp@0.1.2"]
     }
   }
 }
@@ -54,7 +54,7 @@ For the npm package, merge this into your Codex `config.toml`:
 ```toml
 [mcp_servers.jev]
 command = "npx"
-args = ["-y", "jev-decision-mcp@0.1.1"]
+args = ["-y", "jev-decision-mcp@0.1.2"]
 env_vars = ["TYPESAFE_API_KEY"]
 tool_timeout_sec = 45
 ```
@@ -121,7 +121,7 @@ Call `jev_decide` with the JSON in [examples/decision.json](examples/decision.js
 }
 ```
 
-The response contains `model`, `answers`, and `usage`, both as MCP structured content and JSON text. Choice supports 1–255 named options. Instructions and descriptions may be strings, JSON objects, or arrays; choice descriptions may also be null. Noul accepts optional `criteria.true` and `criteria.false` descriptions.
+The response contains `model`, `answers`, and `usage`, both as MCP structured content and JSON text. Jev may round probabilities to two decimal places, so their sum can differ slightly from 1. The server allows the corresponding rounding margin (up to 0.005 per option) and preserves the returned values without normalization. Choice supports 1–255 named options. Instructions and descriptions may be strings, JSON objects, or arrays; choice descriptions may also be null. Noul accepts optional `criteria.true` and `criteria.false` descriptions.
 
 Supply relevant facts, source text, and policies explicitly: Jev cannot see the caller's conversation or local files. Write complete judgments in `instructions`; IDs are only response keys. Include a no-match option when appropriate. Questions in one batch cannot see one another's answers. A noul near 0.5 is uncertainty about yes/no, not medium intensity. Confidence does not authorize actions or guarantee correctness; evaluate thresholds on representative data.
 
@@ -179,7 +179,7 @@ contains the compiled server, license, README, example input, and registry metad
 Local `.env` files, tests, and development dependencies are not bundled.
 
 Clients can launch the published npm package with
-`npx -y jev-decision-mcp@0.1.1`. For that installation method, provide
+`npx -y jev-decision-mcp@0.1.2`. For that installation method, provide
 `TYPESAFE_API_KEY` in the MCP host's environment; the package does not read a `.env`
 from the caller's working directory. The clone-and-build setup above remains
 available independently of npm publication.
