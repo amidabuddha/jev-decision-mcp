@@ -12,7 +12,22 @@ Independent community project; not affiliated with TypeSafe. Licensed under [MIT
 
 Batch independent questions over the same context in one call. Answers retain their question IDs. The MCP returns judgments and token usage; the caller owns thresholds, escalation, and action execution.
 
-## Setup
+## Install from npm
+
+Requires Node.js 22 or newer. The published package runs without cloning or building:
+
+```sh
+npx -y jev-decision-mcp@0.1.0
+```
+
+Set `TYPESAFE_API_KEY` in your MCP host's environment. Configure the host to run
+`npx` with arguments `["-y", "jev-decision-mcp@0.1.0"]`. It communicates over stdio;
+starting it in a terminal waits for an MCP client rather than opening a web page.
+The npm installation does not read a `.env` from the caller's working directory.
+
+Package: [jev-decision-mcp on npm](https://www.npmjs.com/package/jev-decision-mcp).
+
+## Setup from source
 
 Requires Node.js 22 or newer.
 
@@ -139,7 +154,7 @@ To verify the publishable artifact locally, run `npm pack --dry-run`. The packag
 contains the compiled server, license, README, example input, and registry metadata.
 Local `.env` files, tests, and development dependencies are not bundled.
 
-After the npm package has been published, clients can launch it with
+Clients can launch the published npm package with
 `npx -y jev-decision-mcp@0.1.0`. For that installation method, provide
 `TYPESAFE_API_KEY` in the MCP host's environment; the package does not read a `.env`
 from the caller's working directory. The clone-and-build setup above remains
