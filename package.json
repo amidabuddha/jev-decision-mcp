@@ -1,6 +1,6 @@
 {
   "name": "jev-decision-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A local MCP server for TypeSafe Jev typed decisions",
   "type": "module",
   "engines": {
