@@ -174,18 +174,10 @@ Clients can launch the published npm package with
 from the caller's working directory. The clone-and-build setup above remains
 available independently of npm publication.
 
-## Container and Glama inspection
+## Glama inspection
 
-```sh
-docker build -t jev-decision-mcp .
-docker run --rm -i -e TYPESAFE_API_KEY jev-decision-mcp
-```
-
-The image runs as a non-root user and contains no `.env`. Supply credentials at
-runtime. Without a key it still starts and supports MCP initialization and
-`tools/list`; decision calls return `MISSING_API_KEY`.
-
-Glama has its own build configuration. In the listing's Dockerfile admin page,
-use build steps `npm ci` and `npm run build`, with CMD arguments
-`["node", "dist/index.js"]`. Inspection does not need a real TypeSafe key. The
-repository Dockerfile is also available for standard Docker builds.
+Glama's build configuration is managed in the listing's Dockerfile admin page.
+Use build steps `npm ci` and `npm run build`, with CMD arguments
+`["node", "dist/index.js"]`. No repository Dockerfile or TypeSafe key is needed
+for inspection: the server starts without credentials and supports MCP
+initialization and `tools/list`. Decision calls still require `TYPESAFE_API_KEY`.

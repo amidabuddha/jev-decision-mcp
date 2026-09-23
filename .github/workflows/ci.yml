@@ -17,4 +17,3 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm pack --dry-run
-      - run: docker build --tag jev-decision-mcp .
