@@ -1,15 +1,17 @@
 #!/usr/bin/env node
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { loadProjectEnv, readConfig } from "./config.js";
+import { ConfigError, loadProjectEnv, readConfig } from "./config.js";
 import { createDecider } from "./decision.js";
 import { createServer } from "./server.js";
 
 try {
   loadProjectEnv();
-  const server = createServer(createDecider(readConfig()));
+  const config = readConfig();
+  const server = createServer(createDecider(config), config);
   await server.connect(new StdioServerTransport());
-} catch {
+} catch (error) {
   // stdout is reserved for MCP; never print environment values or error bodies.
-  console.error("Jev MCP could not start. Check .env readability and JEV_TIMEOUT_MS (1–120000).");
+  const detail = error instanceof ConfigError ? ` ${error.message}.` : "";
+  console.error(`Jev MCP could not start.${detail} Check API_KEY, BASE_URL, MODEL, JEV_TIMEOUT_MS (1–120000) and .env readability.`);
   process.exitCode = 1;
 }

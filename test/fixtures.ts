@@ -3,7 +3,17 @@ import type { Config } from "../src/config.js";
 import { decisionInput, type DecisionOutput } from "../src/schema.js";
 
 export const input = decisionInput.parse(JSON.parse(readFileSync(new URL("../examples/decision.json", import.meta.url), "utf8")));
-export const config: Config = { apiKey: "synthetic-test-key", model: "jev-latest", timeoutMs: 30000 };
+
+// Arbitrary SDK-compatible destinations: invented domains with path prefixes,
+// localhost for self-hosting and plain HTTP. No provider allowlist exists.
+export const config: Config = { apiKey: "synthetic-test-key", baseURL: "https://api.invented.example/decisions", model: "judge-model-7", timeoutMs: 30000 };
+export const localhostConfig: Config = { apiKey: "synthetic-local-key", baseURL: "http://127.0.0.1:8787/jev", model: "local-eval-model", timeoutMs: 30000 };
+export const remoteHttpConfig: Config = { apiKey: "synthetic-remote-key", baseURL: "http://decisions.remote.example/judge/v2", model: "model-a.b-c_3", timeoutMs: 30000 };
+export const configs = [config, localhostConfig, remoteHttpConfig];
+
+/** The SDK route composed under the configured destination. */
+export const endpoint = (cfg: Config): string => `${cfg.baseURL}/v1/systemone`;
+
 export const output: DecisionOutput = {
   model: "jev-1.13.0",
   answers: {

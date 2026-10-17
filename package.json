@@ -1,7 +1,7 @@
 {
   "name": "jev-decision-mcp",
-  "version": "0.1.3",
-  "description": "A local MCP server for TypeSafe Jev typed decisions",
+  "version": "0.3.0",
+  "description": "A local stdio MCP server exposing one tool, jev_decide, for typed Jev decisions (choice, score, and yes/no probabilities) through any SDK-compatible decision API endpoint",
   "type": "module",
   "engines": {
     "node": ">=22.0.0"
@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.30.0",
-    "@typesafe-ai/sdk": "0.6.0",
+    "@typesafe-ai/sdk": "0.7.0",
     "zod": "^4.0.0"
   },
   "devDependencies": {
@@ -40,7 +40,9 @@
     "mcp",
     "mcp-server",
     "jev",
-    "typesafe",
+    "decisions",
+    "decision-api",
+    "typed-decisions",
     "codex",
     "classification"
   ],

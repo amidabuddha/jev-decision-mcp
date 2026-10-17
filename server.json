@@ -1,37 +1,43 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.amidabuddha/jev-decision-mcp",
-  "description": "Typed Jev decisions in one batched tool: choice, score, and yes/no probabilities.",
+  "description": "Typed Jev decisions in one tool: choice, score, yes/no probabilities via any compatible endpoint.",
   "repository": {
     "url": "https://github.com/amidabuddha/jev-decision-mcp",
     "source": "github"
   },
-  "version": "0.1.3",
+  "version": "0.3.0",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "jev-decision-mcp",
-      "version": "0.1.3",
+      "version": "0.3.0",
       "transport": {
         "type": "stdio"
       },
       "environmentVariables": [
         {
-          "name": "TYPESAFE_API_KEY",
-          "description": "Your TypeSafe API key from console.typesafe.ai",
+          "name": "BASE_URL",
+          "description": "Absolute http(s) API root prefix; the SDK appends /v1/systemone. Required at startup with no provider default or host allowlist; custom path prefixes are supported. Must not include credentials, a query or a fragment.",
           "isRequired": true,
+          "format": "string"
+        },
+        {
+          "name": "MODEL",
+          "description": "Default model name sent to the configured endpoint. Required at startup with no default or model allowlist; a per-call model argument overrides it and a blank per-call override is rejected.",
+          "isRequired": true,
+          "format": "string"
+        },
+        {
+          "name": "API_KEY",
+          "description": "API credential for the configured endpoint, sent as a Bearer token. Optional at startup (tool discovery works without it); decision calls require it and return MISSING_API_KEY until it is set.",
+          "isRequired": false,
           "isSecret": true,
           "format": "string"
         },
         {
-          "name": "TYPESAFE_DEFAULT_MODEL",
-          "description": "Default Jev model",
-          "default": "jev-latest",
-          "format": "string"
-        },
-        {
           "name": "JEV_TIMEOUT_MS",
-          "description": "Total request deadline in milliseconds, including retries (1\u2013120000)",
+          "description": "Total request deadline in milliseconds, including automatic SDK retries (1\u2013120000)",
           "default": "30000",
           "format": "number"
         }

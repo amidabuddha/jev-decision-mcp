@@ -30,7 +30,7 @@ export const decisionInput = z.strictObject({
   state: entry.describe("Relevant source text or JSON context; include evidence, definitions and policies needed for the questions."),
   questions: z.record(key, question).refine((value) => Object.keys(value).length > 0, "Provide at least one question")
     .describe("Named independent questions over the same state. IDs are not model instructions; write each full judgment in instructions."),
-  model: z.string().trim().min(1).optional().describe("Optional TypeSafe model override; defaults to the configured model or jev-latest."),
+  model: z.string().trim().min(1).optional().describe("Optional model override; defaults to the configured MODEL. Changes only the model name, never the credential or destination."),
 });
 export type DecisionInput = z.infer<typeof decisionInput>;
 
