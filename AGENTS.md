@@ -18,6 +18,10 @@ For documentation-only changes to repository instructions, review the diff and c
 - Verify each notice with `npm view jev-decision-mcp@<affected-version> deprecated`. Deprecation needs npm maintainer authentication separately from the publishing workflow. If authentication blocks it, report the exact versions still pending and do not claim deprecation is complete.
 - After a release, the pinned version in `~/.codex/config.toml` has to change for Codex to use it. Ask before editing that file.
 
+## Documentation
+
+- Docs describe the current state only. Do not add dated implementation logs, acceptance or validation evidence, release reports or completed-task lists; put evidence in commit messages.
+
 ## Git workflow
 
 - Commit locally as work progresses. Push only when Stefan asks; when a milestone is done, ask once whether to push now or not yet. A push to `main` runs `.github/workflows/ci.yml`.
